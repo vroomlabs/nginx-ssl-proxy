@@ -16,7 +16,7 @@
 LISTEN_HTTP_PORT=80
 LISTEN_HTTPS_PORT=443
 LISTEN_STATUS_PORT=8090
-BACKEND_SERVICE=127.0.0.1:8080
+BACKEND_SERVICE=http://127.0.0.1:8080
 
 echo args = $@
 
@@ -58,8 +58,8 @@ sed -i "s/\$LISTEN_STATUS_PORT/${LISTEN_STATUS_PORT}/g;" /etc/nginx/nginx.conf
 # cat /etc/nginx/nginx.conf
 sed -i "s/\$LISTEN_HTTP_PORT/${LISTEN_HTTP_PORT}/g;" /etc/nginx/sites-enabled/proxy.conf
 sed -i "s/\$LISTEN_HTTPS_PORT/${LISTEN_HTTPS_PORT}/g;" /etc/nginx/sites-enabled/proxy.conf
-sed -i "s/\$BACKEND_SERVICE/${BACKEND_SERVICE}/g;" /etc/nginx/sites-enabled/proxy.conf
-# cat /etc/nginx/sites-enabled/proxy.conf
+echo "set \$backend_service ${BACKEND_SERVICE};" > /etc/nginx/backend.conf
+cat /etc/nginx/backend.conf
 
 echo "Starting nginx..."
 nginx
