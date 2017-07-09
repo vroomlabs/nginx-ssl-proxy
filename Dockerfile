@@ -20,4 +20,4 @@ FROM nginx
 ADD start.sh /usr/src/
 COPY nginx/ /etc/nginx/
 
-ENTRYPOINT /usr/src/start.sh
+ENTRYPOINT ["/usr/src/start.sh"]

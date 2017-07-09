@@ -18,6 +18,8 @@ LISTEN_HTTPS_PORT=443
 LISTEN_STATUS_PORT=8090
 BACKEND_SERVICE=127.0.0.1:8080
 
+echo args = $@
+
 while [[ $# -gt 1 ]]
 do
 key="$1"
@@ -47,12 +49,17 @@ esac
 shift # past argument or value
 done
 
-PORTS_FILE=/etc/nginx/connections.conf
-echo Generated file > $PORTS_FILE
-echo set LISTEN_HTTP_PORT $LISTEN_HTTP_PORT >> $PORTS_FILE
-echo set LISTEN_HTTPS_PORT $LISTEN_HTTPS_PORT >> $PORTS_FILE
-echo set LISTEN_STATUS_PORT $LISTEN_STATUS_PORT >> $PORTS_FILE
-echo set BACKEND_SERVICE $BACKEND_SERVICE >> $PORTS_FILE
+echo LISTEN_HTTP_PORT $LISTEN_HTTP_PORT
+echo LISTEN_HTTPS_PORT $LISTEN_HTTPS_PORT
+echo LISTEN_STATUS_PORT $LISTEN_STATUS_PORT
+echo BACKEND_SERVICE $BACKEND_SERVICE
+
+sed -i "s/\$LISTEN_STATUS_PORT/${LISTEN_STATUS_PORT}/g;" /etc/nginx/nginx.conf
+# cat /etc/nginx/nginx.conf
+sed -i "s/\$LISTEN_HTTP_PORT/${LISTEN_HTTP_PORT}/g;" /etc/nginx/sites-enabled/proxy.conf
+sed -i "s/\$LISTEN_HTTPS_PORT/${LISTEN_HTTPS_PORT}/g;" /etc/nginx/sites-enabled/proxy.conf
+sed -i "s/\$BACKEND_SERVICE/${BACKEND_SERVICE}/g;" /etc/nginx/sites-enabled/proxy.conf
+# cat /etc/nginx/sites-enabled/proxy.conf
 
 echo "Starting nginx..."
 nginx
